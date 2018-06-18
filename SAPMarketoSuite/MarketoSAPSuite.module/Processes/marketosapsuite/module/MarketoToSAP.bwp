@@ -1,0 +1,2232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpws:process exitOnStandardFault="no"
+    name="marketosapsuite.module.MarketoToSAP" suppressJoinFailure="yes"
+    targetNamespace="http://xmlns.example.com/20180424004752"
+    xmlns:bpws="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:info="http://www.tibco.com/bw/process/info"
+    xmlns:ns="http://www.tibco.com/pe/EngineTypes"
+    xmlns:ns0="http://tns.tibco.com/bw/activity/timer/xsd/output"
+    xmlns:ns1="http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+input"
+    xmlns:ns2="http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+output"
+    xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/invokerequestresponse+7c12469f-bd04-4f15-bc71-f3aec1080595+Input"
+    xmlns:ns4="http://ns.tibco.com/bw/palette/sap"
+    xmlns:ns5="http://www.tibco.com/namespaces/tnt/plugins/invokerequestresponse+7c12469f-bd04-4f15-bc71-f3aec1080595+Output"
+    xmlns:ns6="http://www.tibco.com/pe/WriteToLogActivitySchema"
+    xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+    xmlns:sca-bpel="http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801"
+    xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"
+    xmlns:tibprop="http://ns.tibco.com/bw/property" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <tibex:Types>
+        <xs:schema attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://www.tibco.com/pe/EngineTypes"
+            xmlns:tns="http://www.tibco.com/pe/EngineTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="ErrorReport">
+                <xs:sequence>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="StackTrace" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="Msg" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="FullClass" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="Class" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ProcessStack" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="MsgCode" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Data" type="tns:anydata"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="OptionalErrorReport">
+                <xs:sequence>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0"
+                        name="StackTrace" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Msg" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0"
+                        name="FullClass" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Class" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0"
+                        name="ProcessStack" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="MsgCode" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Data" type="tns:anydata"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="FaultDetail">
+                <xs:sequence>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ActivityName" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Data" type="tns:anydata"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="Msg" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="MsgCode" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ProcessStack" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="StackTrace" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="FullClass" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="Class" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="ProcessContext">
+                <xs:sequence>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="JobId" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ApplicationName" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="EngineName" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ProcessInstanceId" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0"
+                        name="CustomJobId" type="xs:string"/>
+                    <!--xs:element name="RestartedFromCheckpoint" form="unqualified" block="extension restriction substitution" type="xs:boolean"/-->
+                    <!--xs:element minOccurs="0" maxOccurs="unbounded" name="TrackingInfo" form="unqualified" block="extension restriction substitution" type="xs:string"/-->
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="anydata">
+                <xs:sequence>
+                    <xs:any namespace="##any" processContents="lax"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="OptionalErrorReport" type="tns:OptionalErrorReport"/>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="ErrorReport" type="tns:ErrorReport"/>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="FaultDetail" type="tns:FaultDetail"/>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="ProcessContext" type="tns:ProcessContext"/>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="CorrelationValue" type="xs:string"/>
+        </xs:schema>
+        <schema attributeFormDefault="unqualified"
+            elementFormDefault="unqualified"
+            targetNamespace="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions"
+            version="" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions">
+            <complexType name="ActivityExceptionType">
+                <sequence>
+                    <element name="msg" type="string"/>
+                    <element minOccurs="0" name="msgCode" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="ActivityException" type="tns:ActivityExceptionType"/>
+            <complexType name="ActivityTimedOutExceptionType">
+                <complexContent>
+                    <extension base="tns:ActivityExceptionType"/>
+                </complexContent>
+            </complexType>
+            <element name="ActivityTimedOutException" type="tns:ActivityTimedOutExceptionType"/>
+        </schema>
+        <xs:schema attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://tns.tibco.com/bw/activity/timer/xsd/output"
+            xmlns:tns="http://tns.tibco.com/bw/activity/timer/xsd/output" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:complexType name="TimerOutputSchemaType">
+                <xs:sequence>
+                    <xs:element form="unqualified" name="Now" type="xs:long"/>
+                    <xs:element form="unqualified" name="Hour" type="xs:int"/>
+                    <xs:element form="unqualified" name="Minute" type="xs:int"/>
+                    <xs:element form="unqualified" name="Second" type="xs:int"/>
+                    <xs:element form="unqualified" name="Week" type="xs:int"/>
+                    <xs:element form="unqualified" name="Month" type="xs:int"/>
+                    <xs:element form="unqualified" name="Year" type="xs:int"/>
+                    <xs:element form="unqualified" name="Date" type="xs:date"/>
+                    <xs:element form="unqualified" name="Time" type="xs:string"/>
+                    <xs:element form="unqualified" name="DayOfMonth" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="TimerOutputSchema" type="tns:TimerOutputSchemaType"/>
+        </xs:schema>
+        <schema elementFormDefault="qualified"
+            targetNamespace="http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+input"
+            xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+input">
+            <!-- Endpoints for Leads -->
+            <element name="GetLeadByIdRequest" type="tns:ParamGetLeadById"/>
+            <element name="GetLeadByIdResponse" type="tns:SuccessGetLeadById"/>
+            <complexType name="ParamGetLeadById">
+                <sequence>
+                    <element name="id" type="integer"/>
+                </sequence>
+            </complexType>
+            <complexType name="ResultFields">
+                <all>
+                    <element minOccurs="0" name="id" type="string"/>
+                    <element minOccurs="0" name="email" type="string"/>
+                    <element minOccurs="0" name="firstName" type="string"/>
+                    <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetLeadById">
+                <all>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element minOccurs="0" name="result" type="tns:ResultFields"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </all>
+            </complexType>
+            <element name="GetMultipleLeadsbyFilterTypeRequest" type="tns:ParamGetMultipleLeadsbyFilterType"/>
+            <element name="GetMultipleLeadsbyFilterTypeResponse" type="tns:SuccessGetMultipleLeadsbyFilterType"/>
+            <complexType name="ParamGetMultipleLeadsbyFilterType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="filterType" type="string"/>
+                    <element name="filterValues" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetMultipleLeadsbyFilterType">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultFields"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="ParamsFilterValues">
+                <sequence>
+                    <element maxOccurs="unbounded" minOccurs="1"
+                        name="value" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="LeadIds">
+                <sequence>
+                    <element maxOccurs="unbounded" minOccurs="1"
+                        name="value" type="integer"/>
+                </sequence>
+            </complexType>
+            <element name="GetMultipleLeadsbyListIdRequest" type="tns:ParamGetMultipleLeadsbyListId"/>
+            <element name="GetMultipleLeadsbyListIdResponse" type="tns:SuccessGetMultipleLeadsbyListId"/>
+            <complexType name="ParamGetMultipleLeadsbyListId">
+                <all>
+                    <element name="listId" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetMultipleLeadsbyListId">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultFields"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Lists -->
+            <element name="GetListbyIdRequest" type="tns:ParamGetListbyId"/>
+            <element name="GetListbyIdResponse" type="tns:SuccessGetListbyId"/>
+            <complexType name="ParamGetListbyId">
+                <all>
+                    <element name="id" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetListbyId">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element minOccurs="0" name="result">
+                        <complexType>
+                            <sequence>
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="name" type="string"/>
+                                <element minOccurs="0"
+                                    name="description" type="string"/>
+                                <element minOccurs="0"
+                                    name="programName" type="string"/>
+                                <element minOccurs="0"
+                                    name="workspaceName" type="string"/>
+                                <element minOccurs="0" name="createdAt" type="dateTime"/>
+                                <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                            </sequence>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="GetMultipleListsRequest" type="tns:ParamGetMultipleLists"/>
+            <element name="GetMultipleListsResponse" type="tns:SuccessGetMultipleLists"/>
+            <complexType name="ParamGetMultipleLists">
+                <sequence>
+                    <element minOccurs="0" name="ids" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="names" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="programNames" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="workspaceNames" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetMultipleLists">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ListFields"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="ListFields">
+                <all>
+                    <element minOccurs="0" name="id" type="string"/>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="description" type="string"/>
+                    <element minOccurs="0" name="programName" type="string"/>
+                    <element minOccurs="0" name="workspaceName" type="string"/>
+                    <element minOccurs="0" name="createdAt" type="dateTime"/>
+                    <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                </all>
+            </complexType>
+            <element name="GetMemberOfListRequest" type="tns:ParamGetMemeberOfList"/>
+            <element name="GetMemberOfListResponse" type="tns:SuccessGetMemeberOfList"/>
+            <complexType name="ParamGetMemeberOfList">
+                <sequence>
+                    <element name="listid" type="string"/>
+                    <element minOccurs="0" name="ids" type="tns:LeadIds"/>
+                </sequence>
+            </complexType>
+            <complexType name="ReasonFields">
+                <all>
+                    <element minOccurs="0" name="code" type="string"/>
+                    <element minOccurs="0" name="message" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="ResultFieldsMemberList">
+                <sequence>
+                    <element minOccurs="0" name="id" type="integer"/>
+                    <element minOccurs="0" name="status" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="reasons" type="tns:ReasonFields"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetMemeberOfList">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultFieldsMemberList"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="GetImportLeadStatusRequest" type="tns:ParamGetImportLeadStatus"/>
+            <element name="GetImportLeadStatusResponse" type="tns:SuccessGetImportLeadStatus"/>
+            <complexType name="ParamGetImportLeadStatus">
+                <all>
+                    <element name="id" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetImportLeadStatus">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element minOccurs="0" name="result">
+                        <complexType>
+                            <all>
+                                <element minOccurs="0" name="batchId" type="string"/>
+                                <element maxOccurs="1" minOccurs="0"
+                                    name="importId" type="string"/>
+                                <element minOccurs="0" name="status" type="string"/>
+                                <element minOccurs="0"
+                                    name="numOfLeadsProcessed" type="integer"/>
+                                <element minOccurs="0"
+                                    name="numOfRowsFailed" type="integer"/>
+                                <element minOccurs="0"
+                                    name="numOfRowsWithWarning" type="integer"/>
+                                <element minOccurs="0" name="message" type="string"/>
+                            </all>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="GetImportFailureFileRequest" type="tns:ParamGetImportFailureFile"/>
+            <element name="GetImportFailureFileResponse" type="tns:SuccessGetImportFailureFile"/>
+            <complexType name="ParamGetImportFailureFile">
+                <all>
+                    <element name="id" type="string"/>
+                    <element name="fileName" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetImportFailureFile">
+                <sequence>
+                    <element minOccurs="0" name="fileName" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="GetImportWarningFileRequest" type="tns:ParamGetImportWarningFile"/>
+            <element name="GetImportWarningFileResponse" type="tns:SuccessGetImportWarningFile"/>
+            <complexType name="ParamGetImportWarningFile">
+                <all>
+                    <element name="id" type="string"/>
+                    <element name="fileName" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetImportWarningFile">
+                <sequence>
+                    <element minOccurs="0" name="fileName" type="string"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Campaigns -->
+            <element name="GetCampaignbyIDRequest" type="tns:ParamGetCampaignbyID"/>
+            <element name="GetCampaignbyIDResponse" type="tns:SuccessGetCampaignbyID"/>
+            <complexType name="ParamGetCampaignbyID">
+                <all>
+                    <element name="id" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetCampaignbyID">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element name="result">
+                        <complexType>
+                            <all>
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="name" type="string"/>
+                                <element minOccurs="0"
+                                    name="description" type="string"/>
+                                <element minOccurs="0"
+                                    name="programName" type="string"/>
+                                <element minOccurs="0" name="programId" type="string"/>
+                                <element minOccurs="0" name="createdAt" type="dateTime"/>
+                                <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                                <element minOccurs="0" name="type" type="string"/>
+                                <element minOccurs="0"
+                                    name="workspaceName" type="string"/>
+                                <element minOccurs="0" name="active" type="string"/>
+                            </all>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="GetMultipleCampaignsRequest" type="tns:ParamGetMultipleCampaigns"/>
+            <element name="GetMultipleCampaignsResponse" type="tns:SuccessGetMultipleCampaigns"/>
+            <complexType name="ParamGetMultipleCampaigns">
+                <all>
+                    <element minOccurs="0" name="ids" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="names" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="programNames" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="workspaceNames" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetMultipleCampaigns">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0" name="result">
+                        <complexType>
+                            <all>
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="name" type="string"/>
+                                <element minOccurs="0"
+                                    name="description" type="string"/>
+                                <element minOccurs="0"
+                                    name="programName" type="string"/>
+                                <element minOccurs="0" name="programId" type="string"/>
+                                <element minOccurs="0" name="createdAt" type="dateTime"/>
+                                <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                                <element minOccurs="0" name="type" type="string"/>
+                                <element minOccurs="0"
+                                    name="workspaceName" type="string"/>
+                                <element minOccurs="0" name="active" type="string"/>
+                            </all>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Activities -->
+            <element name="GetPagingTokenRequest" type="tns:ParamGetPagingToken"/>
+            <element name="GetPagingTokenResponse" type="tns:SuccessGetPagingToken"/>
+            <complexType name="ParamGetPagingToken">
+                <all>
+                    <element name="sinceDatetime" type="string"/>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetPagingToken">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="GetActivityTypesRequest" type="tns:ParamGetActivityTypes"/>
+            <element name="GetActivityTypesResponse" type="tns:SuccessGetActivityTypes"/>
+            <complexType name="ParamGetActivityTypes">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetActivityTypes">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="success" type="boolean"/>
+                    <element name="result">
+                        <complexType>
+                            <all>
+                                <element name="id" type="string"/>
+                                <element name="name" type="string"/>
+                                <element name="description" type="string"/>
+                                <element name="primaryAttribute" type="tns:GetActivityTypesPrimaryAttribute"/>
+                                <element name="attributes" type="tns:GetActivityTypesAttributes"/>
+                            </all>
+                        </complexType>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="GetActivityTypesPrimaryAttribute">
+                <all>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="dataType" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="GetActivityTypesAttributes">
+                <all>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="dataType" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetLeadActivitiesRequest" type="tns:ParamGetLeadActivities"/>
+            <element name="GetLeadActivitiesResponse" type="tns:SuccessGetLeadActivities"/>
+            <complexType name="ParamGetLeadActivities">
+                <all>
+                    <element name="activityTypeIds" type="tns:ActivityTypeIds"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="listId" type="string"/>
+                    <element minOccurs="0" name="sinceDatetime" type="dateTime"/>
+                </all>
+            </complexType>
+            <complexType name="ActivityTypeIds">
+                <sequence>
+                    <element maxOccurs="10" minOccurs="1" name="id" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetLeadActivities">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0" name="result">
+                        <complexType>
+                            <choice maxOccurs="unbounded">
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="leadId" type="integer"/>
+                                <element minOccurs="0"
+                                    name="activityDate" type="dateTime"/>
+                                <element minOccurs="0"
+                                    name="activityTypeId" type="string"/>
+                                <element minOccurs="0"
+                                    name="primaryAttributeValueId" type="string"/>
+                                <element minOccurs="0"
+                                    name="primaryAttributeValue" type="string"/>
+                                <element maxOccurs="unbounded"
+                                    name="attributes" type="tns:GetLeadActivitiesAttributes"/>
+                            </choice>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="moreResult" type="boolean"/>
+                </sequence>
+            </complexType>
+            <complexType name="GetLeadActivitiesAttributes">
+                <all>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="value" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetLeadChangesRequest" type="tns:ParamGetLeadChanges"/>
+            <element name="GetLeadChangesResponse" type="tns:SuccessGetLeadChanges"/>
+            <complexType name="ParamGetLeadChanges">
+                <all>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="listId" type="string"/>
+                    <element minOccurs="0" name="sinceDatetime" type="dateTime"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetLeadChanges">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0" name="result">
+                        <complexType>
+                            <choice maxOccurs="unbounded">
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="leadId" type="integer"/>
+                                <element minOccurs="0"
+                                    name="activityDate" type="dateTime"/>
+                                <element minOccurs="0"
+                                    name="activityTypeId" type="string"/>
+                                <element maxOccurs="unbounded"
+                                    minOccurs="0" name="attributes" type="tns:GetLeadChangesAttributes"/>
+                                <element maxOccurs="unbounded"
+                                    minOccurs="0" name="fields" type="tns:ResultFields"/>
+                            </choice>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="moreResult" type="boolean"/>
+                </sequence>
+            </complexType>
+            <complexType name="GetLeadChangesAttributes">
+                <all>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="value" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetDeletedLeadsRequest" type="tns:ParamGetDeletedLeads"/>
+            <element name="GetDeletedLeadsResponse" type="tns:SuccessGetDeletedLeads"/>
+            <complexType name="ParamGetDeletedLeads">
+                <all>
+                    <element name="batchSize" type="int"/>
+                    <element name="nextPageToken" type="string"/>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetDeletedLeads">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="success" type="boolean"/>
+                    <element name="nextPageToken" type="string"/>
+                    <element name="moreResult" type="boolean"/>
+                    <element name="result">
+                        <complexType>
+                            <all>
+                                <element name="id" type="string"/>
+                                <element name="leadId" type="string"/>
+                                <element name="activityDate" type="dateTime"/>
+                                <element name="activityTypeId" type="string"/>
+                                <element name="primaryAttributeValueId" type="string"/>
+                                <element name="primaryAttributeValue" type="string"/>
+                                <element name="attributes" type="tns:Attributes"/>
+                            </all>
+                        </complexType>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="Attributes"/>
+            <!-- Endpoints for API Usage and Error Counts -->
+            <complexType name="UsageResult">
+                <all>
+                    <element name="date" type="string"/>
+                    <element name="total" type="string"/>
+                    <element name="users" type="tns:Users"/>
+                    <element name="success" type="boolean"/>
+                </all>
+            </complexType>
+            <complexType name="Users">
+                <all>
+                    <element name="userId" type="string"/>
+                    <element name="count" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetDailyUsageRequest" type="tns:ParamGetDailyUsage"/>
+            <element name="GetDailyUsageResponse" type="tns:SuccessGetDailyUsage"/>
+            <complexType name="ParamGetDailyUsage">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetDailyUsage">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="result" type="tns:UsageResult"/>
+                </sequence>
+            </complexType>
+            <element name="GetLast7DaysUsageRequest" type="tns:ParamGetLast7DaysUsage"/>
+            <element name="GetLast7DaysUsageResponse" type="tns:SuccessGetLast7DaysUsage"/>
+            <complexType name="ParamGetLast7DaysUsage">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetLast7DaysUsage">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="result" type="tns:UsageResult"/>
+                </sequence>
+            </complexType>
+            <complexType name="ErrorsResult">
+                <all>
+                    <element name="date" type="string"/>
+                    <element name="total" type="string"/>
+                    <element name="errors" type="tns:Errors"/>
+                    <element name="success" type="boolean"/>
+                </all>
+            </complexType>
+            <complexType name="Errors">
+                <all>
+                    <element name="errorCode" type="string"/>
+                    <element name="count" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetDailyErrorsRequest" type="tns:ParamGetDailyErrors"/>
+            <element name="GetDailyErrorsResponse" type="tns:SuccessGetDailyErrors"/>
+            <complexType name="ParamGetDailyErrors">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetDailyErrors">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="result" type="tns:ErrorsResult"/>
+                </sequence>
+            </complexType>
+            <element name="GetLast7DaysErrorsRequest" type="tns:ParamGetLast7DaysErrors"/>
+            <element name="GetLast7DaysErrorsResponse" type="tns:SuccessGetLast7DaysErrors"/>
+            <complexType name="ParamGetLast7DaysErrors">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetLast7DaysErrors">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="result" type="tns:ErrorsResult"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Custom Objects -->
+            <element name="GetCustomObjectByNameRequest" type="tns:ParamGetCustomObjectByName"/>
+            <element name="GetCustomObjectByNameResponse" type="tns:SuccessGetCustomObjectByName"/>
+            <complexType name="ParamGetCustomObjectByName">
+                <sequence>
+                    <element minOccurs="0" name="filterType" type="string"/>
+                    <element minOccurs="0" name="filterValues" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="input" type="tns:RequestInput"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetCustomObjectByName">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultObject"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="errors" type="tns:Errors"/>
+                </sequence>
+            </complexType>
+            <complexType name="Fields">
+                <all>
+                    <element minOccurs="0" name="value" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="RequestInput">
+                <sequence>
+                    <element minOccurs="0" name="object" type="tns:Object"/>
+                </sequence>
+            </complexType>
+            <complexType name="Object">
+                <all>
+                    <element minOccurs="0" name="key" type="string"/>
+                    <element minOccurs="0" name="value" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="ResultObject">
+                <choice maxOccurs="unbounded" minOccurs="0">
+                    <element minOccurs="0" name="seq" type="string"/>
+                    <element minOccurs="0" name="marketoGUID" type="string"/>
+                    <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                    <element minOccurs="0" name="createdAt" type="dateTime"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="reasons" type="tns:Reasons"/>
+                </choice>
+            </complexType>
+            <complexType name="Reasons">
+                <all>
+                    <element name="code" type="string"/>
+                    <element name="message" type="string"/>
+                </all>
+            </complexType>
+            <!-- Endpoints for Opportunity -->
+            <element name="GetOpportunityRequest" type="tns:ParamGetOpportunity"/>
+            <element name="GetOpportunityResponse" type="tns:SuccessGetOpportunity"/>
+            <complexType name="ParamGetOpportunity">
+                <sequence>
+                    <element minOccurs="0" name="filterType" type="string"/>
+                    <element minOccurs="0" name="filterValues" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="input" type="tns:RequestInput"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetOpportunity">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultObject"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="errors" type="tns:Errors"/>
+                </sequence>
+            </complexType>
+            <element name="GetOpportunityRoleRequest" type="tns:ParamGetOpportunityRole"/>
+            <element name="GetOpportunityRoleResponse" type="tns:SuccessGetOpportunityRole"/>
+            <complexType name="ParamGetOpportunityRole">
+                <sequence>
+                    <element minOccurs="0" name="filterType" type="string"/>
+                    <element minOccurs="0" name="filterValues" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="input" type="tns:RequestInput"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetOpportunityRole">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultObject"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="errors" type="tns:Errors"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Company -->
+            <element name="GetCompaniesRequest" type="tns:ParamGetCompanies"/>
+            <element name="GetCompaniesResponse" type="tns:SuccessGetCompanies"/>
+            <complexType name="ParamGetCompanies">
+                <sequence>
+                    <element minOccurs="0" name="filterType" type="string"/>
+                    <element minOccurs="0" name="filterValues" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="input" type="tns:RequestInput"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetCompanies">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:CompaniesResultObject"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="errors" type="tns:Errors"/>
+                </sequence>
+            </complexType>
+            <complexType name="CompaniesResultObject">
+                <choice maxOccurs="unbounded" minOccurs="0">
+                    <element minOccurs="0" name="seq" type="string"/>
+                    <element minOccurs="0" name="id" type="string"/>
+                    <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                    <element minOccurs="0" name="createdAt" type="dateTime"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="reasons" type="tns:Reasons"/>
+                </choice>
+            </complexType>
+        </schema>
+        <schema elementFormDefault="qualified"
+            targetNamespace="http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+output"
+            xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+output">
+            <!-- Endpoints for Leads -->
+            <element name="GetLeadByIdRequest" type="tns:ParamGetLeadById"/>
+            <element name="GetLeadByIdResponse" type="tns:SuccessGetLeadById"/>
+            <complexType name="ParamGetLeadById">
+                <sequence>
+                    <element name="id" type="integer"/>
+                </sequence>
+            </complexType>
+            <complexType name="ResultFields">
+                <all>
+                    <element maxOccurs="1" minOccurs="0" name="id" type="integer"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="updatedAt" type="dateTime"/>
+                    <element maxOccurs="1" minOccurs="0" name="lastName" type="string"/>
+                    <element maxOccurs="1" minOccurs="0" name="email" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="createdAt" type="dateTime"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="firstName" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetLeadById">
+                <all>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element minOccurs="0" name="result" type="tns:ResultFields"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </all>
+            </complexType>
+            <element name="GetMultipleLeadsbyFilterTypeRequest" type="tns:ParamGetMultipleLeadsbyFilterType"/>
+            <element name="GetMultipleLeadsbyFilterTypeResponse" type="tns:SuccessGetMultipleLeadsbyFilterType"/>
+            <complexType name="ParamGetMultipleLeadsbyFilterType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="filterType" type="string"/>
+                    <element name="filterValues" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetMultipleLeadsbyFilterType">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultFields"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="ParamsFilterValues">
+                <sequence>
+                    <element maxOccurs="unbounded" minOccurs="1"
+                        name="value" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="LeadIds">
+                <sequence>
+                    <element maxOccurs="unbounded" minOccurs="1"
+                        name="value" type="integer"/>
+                </sequence>
+            </complexType>
+            <element name="GetMultipleLeadsbyListIdRequest" type="tns:ParamGetMultipleLeadsbyListId"/>
+            <element name="GetMultipleLeadsbyListIdResponse" type="tns:SuccessGetMultipleLeadsbyListId"/>
+            <complexType name="ParamGetMultipleLeadsbyListId">
+                <all>
+                    <element name="listId" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetMultipleLeadsbyListId">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultFields"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Lists -->
+            <element name="GetListbyIdRequest" type="tns:ParamGetListbyId"/>
+            <element name="GetListbyIdResponse" type="tns:SuccessGetListbyId"/>
+            <complexType name="ParamGetListbyId">
+                <all>
+                    <element name="id" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetListbyId">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element minOccurs="0" name="result">
+                        <complexType>
+                            <sequence>
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="name" type="string"/>
+                                <element minOccurs="0"
+                                    name="description" type="string"/>
+                                <element minOccurs="0"
+                                    name="programName" type="string"/>
+                                <element minOccurs="0"
+                                    name="workspaceName" type="string"/>
+                                <element minOccurs="0" name="createdAt" type="dateTime"/>
+                                <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                            </sequence>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="GetMultipleListsRequest" type="tns:ParamGetMultipleLists"/>
+            <element name="GetMultipleListsResponse" type="tns:SuccessGetMultipleLists"/>
+            <complexType name="ParamGetMultipleLists">
+                <sequence>
+                    <element minOccurs="0" name="ids" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="names" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="programNames" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="workspaceNames" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetMultipleLists">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ListFields"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="ListFields">
+                <all>
+                    <element minOccurs="0" name="id" type="string"/>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="description" type="string"/>
+                    <element minOccurs="0" name="programName" type="string"/>
+                    <element minOccurs="0" name="workspaceName" type="string"/>
+                    <element minOccurs="0" name="createdAt" type="dateTime"/>
+                    <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                </all>
+            </complexType>
+            <element name="GetMemberOfListRequest" type="tns:ParamGetMemeberOfList"/>
+            <element name="GetMemberOfListResponse" type="tns:SuccessGetMemeberOfList"/>
+            <complexType name="ParamGetMemeberOfList">
+                <sequence>
+                    <element name="listid" type="string"/>
+                    <element minOccurs="0" name="ids" type="tns:LeadIds"/>
+                </sequence>
+            </complexType>
+            <complexType name="ReasonFields">
+                <all>
+                    <element minOccurs="0" name="code" type="string"/>
+                    <element minOccurs="0" name="message" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="ResultFieldsMemberList">
+                <sequence>
+                    <element minOccurs="0" name="id" type="integer"/>
+                    <element minOccurs="0" name="status" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="reasons" type="tns:ReasonFields"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetMemeberOfList">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultFieldsMemberList"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="GetImportLeadStatusRequest" type="tns:ParamGetImportLeadStatus"/>
+            <element name="GetImportLeadStatusResponse" type="tns:SuccessGetImportLeadStatus"/>
+            <complexType name="ParamGetImportLeadStatus">
+                <all>
+                    <element name="id" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetImportLeadStatus">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element minOccurs="0" name="result">
+                        <complexType>
+                            <all>
+                                <element minOccurs="0" name="batchId" type="string"/>
+                                <element maxOccurs="1" minOccurs="0"
+                                    name="importId" type="string"/>
+                                <element minOccurs="0" name="status" type="string"/>
+                                <element minOccurs="0"
+                                    name="numOfLeadsProcessed" type="integer"/>
+                                <element minOccurs="0"
+                                    name="numOfRowsFailed" type="integer"/>
+                                <element minOccurs="0"
+                                    name="numOfRowsWithWarning" type="integer"/>
+                                <element minOccurs="0" name="message" type="string"/>
+                            </all>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="GetImportFailureFileRequest" type="tns:ParamGetImportFailureFile"/>
+            <element name="GetImportFailureFileResponse" type="tns:SuccessGetImportFailureFile"/>
+            <complexType name="ParamGetImportFailureFile">
+                <all>
+                    <element name="id" type="string"/>
+                    <element name="fileName" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetImportFailureFile">
+                <sequence>
+                    <element minOccurs="0" name="fileName" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="GetImportWarningFileRequest" type="tns:ParamGetImportWarningFile"/>
+            <element name="GetImportWarningFileResponse" type="tns:SuccessGetImportWarningFile"/>
+            <complexType name="ParamGetImportWarningFile">
+                <all>
+                    <element name="id" type="string"/>
+                    <element name="fileName" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetImportWarningFile">
+                <sequence>
+                    <element minOccurs="0" name="fileName" type="string"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Campaigns -->
+            <element name="GetCampaignbyIDRequest" type="tns:ParamGetCampaignbyID"/>
+            <element name="GetCampaignbyIDResponse" type="tns:SuccessGetCampaignbyID"/>
+            <complexType name="ParamGetCampaignbyID">
+                <all>
+                    <element name="id" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetCampaignbyID">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element name="result">
+                        <complexType>
+                            <all>
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="name" type="string"/>
+                                <element minOccurs="0"
+                                    name="description" type="string"/>
+                                <element minOccurs="0"
+                                    name="programName" type="string"/>
+                                <element minOccurs="0" name="programId" type="string"/>
+                                <element minOccurs="0" name="createdAt" type="dateTime"/>
+                                <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                                <element minOccurs="0" name="type" type="string"/>
+                                <element minOccurs="0"
+                                    name="workspaceName" type="string"/>
+                                <element minOccurs="0" name="active" type="string"/>
+                            </all>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                </sequence>
+            </complexType>
+            <element name="GetMultipleCampaignsRequest" type="tns:ParamGetMultipleCampaigns"/>
+            <element name="GetMultipleCampaignsResponse" type="tns:SuccessGetMultipleCampaigns"/>
+            <complexType name="ParamGetMultipleCampaigns">
+                <all>
+                    <element minOccurs="0" name="ids" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="names" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="programNames" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="workspaceNames" type="tns:ParamsFilterValues"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetMultipleCampaigns">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0" name="result">
+                        <complexType>
+                            <all>
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="name" type="string"/>
+                                <element minOccurs="0"
+                                    name="description" type="string"/>
+                                <element minOccurs="0"
+                                    name="programName" type="string"/>
+                                <element minOccurs="0" name="programId" type="string"/>
+                                <element minOccurs="0" name="createdAt" type="dateTime"/>
+                                <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                                <element minOccurs="0" name="type" type="string"/>
+                                <element minOccurs="0"
+                                    name="workspaceName" type="string"/>
+                                <element minOccurs="0" name="active" type="string"/>
+                            </all>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Activities -->
+            <element name="GetPagingTokenRequest" type="tns:ParamGetPagingToken"/>
+            <element name="GetPagingTokenResponse" type="tns:SuccessGetPagingToken"/>
+            <complexType name="ParamGetPagingToken">
+                <all>
+                    <element name="sinceDatetime" type="string"/>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetPagingToken">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="GetActivityTypesRequest" type="tns:ParamGetActivityTypes"/>
+            <element name="GetActivityTypesResponse" type="tns:SuccessGetActivityTypes"/>
+            <complexType name="ParamGetActivityTypes">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetActivityTypes">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="success" type="boolean"/>
+                    <element name="result">
+                        <complexType>
+                            <all>
+                                <element name="id" type="string"/>
+                                <element name="name" type="string"/>
+                                <element name="description" type="string"/>
+                                <element name="primaryAttribute" type="tns:GetActivityTypesPrimaryAttribute"/>
+                                <element name="attributes" type="tns:GetActivityTypesAttributes"/>
+                            </all>
+                        </complexType>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="GetActivityTypesPrimaryAttribute">
+                <all>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="dataType" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="GetActivityTypesAttributes">
+                <all>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="dataType" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetLeadActivitiesRequest" type="tns:ParamGetLeadActivities"/>
+            <element name="GetLeadActivitiesResponse" type="tns:SuccessGetLeadActivities"/>
+            <complexType name="ParamGetLeadActivities">
+                <all>
+                    <element name="activityTypeIds" type="tns:ActivityTypeIds"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="listId" type="string"/>
+                    <element minOccurs="0" name="sinceDatetime" type="dateTime"/>
+                </all>
+            </complexType>
+            <complexType name="ActivityTypeIds">
+                <sequence>
+                    <element maxOccurs="10" minOccurs="1" name="id" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetLeadActivities">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0" name="result">
+                        <complexType>
+                            <choice maxOccurs="unbounded">
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="leadId" type="integer"/>
+                                <element minOccurs="0"
+                                    name="activityDate" type="dateTime"/>
+                                <element minOccurs="0"
+                                    name="activityTypeId" type="string"/>
+                                <element minOccurs="0"
+                                    name="primaryAttributeValueId" type="string"/>
+                                <element minOccurs="0"
+                                    name="primaryAttributeValue" type="string"/>
+                                <element maxOccurs="unbounded"
+                                    name="attributes" type="tns:GetLeadActivitiesAttributes"/>
+                            </choice>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="moreResult" type="boolean"/>
+                </sequence>
+            </complexType>
+            <complexType name="GetLeadActivitiesAttributes">
+                <all>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="value" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetLeadChangesRequest" type="tns:ParamGetLeadChanges"/>
+            <element name="GetLeadChangesResponse" type="tns:SuccessGetLeadChanges"/>
+            <complexType name="ParamGetLeadChanges">
+                <all>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="int"/>
+                    <element minOccurs="0" name="listId" type="string"/>
+                    <element minOccurs="0" name="sinceDatetime" type="dateTime"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetLeadChanges">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0" name="result">
+                        <complexType>
+                            <choice maxOccurs="unbounded">
+                                <element minOccurs="0" name="id" type="string"/>
+                                <element minOccurs="0" name="leadId" type="integer"/>
+                                <element minOccurs="0"
+                                    name="activityDate" type="dateTime"/>
+                                <element minOccurs="0"
+                                    name="activityTypeId" type="string"/>
+                                <element maxOccurs="unbounded"
+                                    minOccurs="0" name="attributes" type="tns:GetLeadChangesAttributes"/>
+                                <element maxOccurs="unbounded"
+                                    minOccurs="0" name="fields" type="tns:ResultFields"/>
+                            </choice>
+                        </complexType>
+                    </element>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="moreResult" type="boolean"/>
+                </sequence>
+            </complexType>
+            <complexType name="GetLeadChangesAttributes">
+                <all>
+                    <element minOccurs="0" name="name" type="string"/>
+                    <element minOccurs="0" name="value" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetDeletedLeadsRequest" type="tns:ParamGetDeletedLeads"/>
+            <element name="GetDeletedLeadsResponse" type="tns:SuccessGetDeletedLeads"/>
+            <complexType name="ParamGetDeletedLeads">
+                <all>
+                    <element name="batchSize" type="int"/>
+                    <element name="nextPageToken" type="string"/>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetDeletedLeads">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="success" type="boolean"/>
+                    <element name="nextPageToken" type="string"/>
+                    <element name="moreResult" type="boolean"/>
+                    <element name="result">
+                        <complexType>
+                            <all>
+                                <element name="id" type="string"/>
+                                <element name="leadId" type="string"/>
+                                <element name="activityDate" type="dateTime"/>
+                                <element name="activityTypeId" type="string"/>
+                                <element name="primaryAttributeValueId" type="string"/>
+                                <element name="primaryAttributeValue" type="string"/>
+                                <element name="attributes" type="tns:Attributes"/>
+                            </all>
+                        </complexType>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="Attributes"/>
+            <!-- Endpoints for API Usage and Error Counts -->
+            <complexType name="UsageResult">
+                <all>
+                    <element name="date" type="string"/>
+                    <element name="total" type="string"/>
+                    <element name="users" type="tns:Users"/>
+                    <element name="success" type="boolean"/>
+                </all>
+            </complexType>
+            <complexType name="Users">
+                <all>
+                    <element name="userId" type="string"/>
+                    <element name="count" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetDailyUsageRequest" type="tns:ParamGetDailyUsage"/>
+            <element name="GetDailyUsageResponse" type="tns:SuccessGetDailyUsage"/>
+            <complexType name="ParamGetDailyUsage">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetDailyUsage">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="result" type="tns:UsageResult"/>
+                </sequence>
+            </complexType>
+            <element name="GetLast7DaysUsageRequest" type="tns:ParamGetLast7DaysUsage"/>
+            <element name="GetLast7DaysUsageResponse" type="tns:SuccessGetLast7DaysUsage"/>
+            <complexType name="ParamGetLast7DaysUsage">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetLast7DaysUsage">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="result" type="tns:UsageResult"/>
+                </sequence>
+            </complexType>
+            <complexType name="ErrorsResult">
+                <all>
+                    <element name="date" type="string"/>
+                    <element name="total" type="string"/>
+                    <element name="errors" type="tns:Errors"/>
+                    <element name="success" type="boolean"/>
+                </all>
+            </complexType>
+            <complexType name="Errors">
+                <all>
+                    <element name="errorCode" type="string"/>
+                    <element name="count" type="string"/>
+                </all>
+            </complexType>
+            <element name="GetDailyErrorsRequest" type="tns:ParamGetDailyErrors"/>
+            <element name="GetDailyErrorsResponse" type="tns:SuccessGetDailyErrors"/>
+            <complexType name="ParamGetDailyErrors">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetDailyErrors">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="result" type="tns:ErrorsResult"/>
+                </sequence>
+            </complexType>
+            <element name="GetLast7DaysErrorsRequest" type="tns:ParamGetLast7DaysErrors"/>
+            <element name="GetLast7DaysErrorsResponse" type="tns:SuccessGetLast7DaysErrors"/>
+            <complexType name="ParamGetLast7DaysErrors">
+                <all>
+                    <element name="_method" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="SuccessGetLast7DaysErrors">
+                <sequence>
+                    <element name="requestId" type="string"/>
+                    <element name="result" type="tns:ErrorsResult"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Custom Objects -->
+            <element name="GetCustomObjectByNameRequest" type="tns:ParamGetCustomObjectByName"/>
+            <element name="GetCustomObjectByNameResponse" type="tns:SuccessGetCustomObjectByName"/>
+            <complexType name="ParamGetCustomObjectByName">
+                <sequence>
+                    <element minOccurs="0" name="filterType" type="string"/>
+                    <element minOccurs="0" name="filterValues" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="input" type="tns:RequestInput"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetCustomObjectByName">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultObject"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="errors" type="tns:Errors"/>
+                </sequence>
+            </complexType>
+            <complexType name="Fields">
+                <all>
+                    <element minOccurs="0" name="value" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="RequestInput">
+                <sequence>
+                    <element minOccurs="0" name="object" type="tns:Object"/>
+                </sequence>
+            </complexType>
+            <complexType name="Object">
+                <all>
+                    <element minOccurs="0" name="key" type="string"/>
+                    <element minOccurs="0" name="value" type="string"/>
+                </all>
+            </complexType>
+            <complexType name="ResultObject">
+                <choice maxOccurs="unbounded" minOccurs="0">
+                    <element minOccurs="0" name="seq" type="string"/>
+                    <element minOccurs="0" name="marketoGUID" type="string"/>
+                    <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                    <element minOccurs="0" name="createdAt" type="dateTime"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="reasons" type="tns:Reasons"/>
+                </choice>
+            </complexType>
+            <complexType name="Reasons">
+                <all>
+                    <element name="code" type="string"/>
+                    <element name="message" type="string"/>
+                </all>
+            </complexType>
+            <!-- Endpoints for Opportunity -->
+            <element name="GetOpportunityRequest" type="tns:ParamGetOpportunity"/>
+            <element name="GetOpportunityResponse" type="tns:SuccessGetOpportunity"/>
+            <complexType name="ParamGetOpportunity">
+                <sequence>
+                    <element minOccurs="0" name="filterType" type="string"/>
+                    <element minOccurs="0" name="filterValues" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="input" type="tns:RequestInput"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetOpportunity">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultObject"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="errors" type="tns:Errors"/>
+                </sequence>
+            </complexType>
+            <element name="GetOpportunityRoleRequest" type="tns:ParamGetOpportunityRole"/>
+            <element name="GetOpportunityRoleResponse" type="tns:SuccessGetOpportunityRole"/>
+            <complexType name="ParamGetOpportunityRole">
+                <sequence>
+                    <element minOccurs="0" name="filterType" type="string"/>
+                    <element minOccurs="0" name="filterValues" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="input" type="tns:RequestInput"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetOpportunityRole">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:ResultObject"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="errors" type="tns:Errors"/>
+                </sequence>
+            </complexType>
+            <!-- Endpoints for Company -->
+            <element name="GetCompaniesRequest" type="tns:ParamGetCompanies"/>
+            <element name="GetCompaniesResponse" type="tns:SuccessGetCompanies"/>
+            <complexType name="ParamGetCompanies">
+                <sequence>
+                    <element minOccurs="0" name="filterType" type="string"/>
+                    <element minOccurs="0" name="filterValues" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="input" type="tns:RequestInput"/>
+                    <element minOccurs="0" name="nextPageToken" type="string"/>
+                    <element minOccurs="0" name="batchSize" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="SuccessGetCompanies">
+                <sequence>
+                    <element minOccurs="0" name="requestId" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="result" type="tns:CompaniesResultObject"/>
+                    <element minOccurs="0" name="success" type="boolean"/>
+                    <element minOccurs="0" name="errors" type="tns:Errors"/>
+                </sequence>
+            </complexType>
+            <complexType name="CompaniesResultObject">
+                <choice maxOccurs="unbounded" minOccurs="0">
+                    <element minOccurs="0" name="seq" type="string"/>
+                    <element minOccurs="0" name="id" type="string"/>
+                    <element minOccurs="0" name="updatedAt" type="dateTime"/>
+                    <element minOccurs="0" name="createdAt" type="dateTime"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="reasons" type="tns:Reasons"/>
+                </choice>
+            </complexType>
+        </schema>
+        <schema elementFormDefault="unqualified"
+            targetNamespace="http://www.tibco.com/namespaces/tnt/plugins/invokerequestresponse+7c12469f-bd04-4f15-bc71-f3aec1080595+Input"
+            xmlns="http://www.w3.org/2001/XMLSchema"
+            xmlns:Q1="http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT" xmlns:tns="http://www.tibco.com/namespaces/tnt/plugins/invokerequestresponse+7c12469f-bd04-4f15-bc71-f3aec1080595+Input">
+            <import namespace="http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT"/>
+            <complexType name="RequestInputType">
+                <sequence>
+                    <element minOccurs="0" name="sessionID" type="string"/>
+                    <element minOccurs="0" name="timeout" type="long"/>
+                    <element maxOccurs="1" ref="Q1:RfcRequest"/>
+                </sequence>
+            </complexType>
+            <complexType name="ProcessStarterOutput">
+                <sequence>
+                    <element minOccurs="0" name="SAPJCoAttributes" type="tns:SAPJCoAttributes"/>
+                </sequence>
+            </complexType>
+            <complexType name="SAPJCoAttributes">
+                <sequence>
+                    <element minOccurs="0" name="SAPJCO_RFCDESTINATION" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_CLIENT" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_CPICCONVID" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_HOST" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_SYSID" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_USER" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="SAPJCoAttributes" type="tns:SAPJCoAttributes"/>
+            <complexType name="appInfo">
+                <sequence>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="info" type="tns:info"/>
+                </sequence>
+            </complexType>
+            <complexType name="info">
+                <sequence>
+                    <element minOccurs="0" name="item" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="ProcessStarterOutput" type="tns:ProcessStarterOutput"/>
+            <element name="RequestInputType" type="tns:RequestInputType"/>
+            <complexType name="RequestOutputType">
+                <sequence>
+                    <element minOccurs="0" name="sessionID" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="RequestOutputType" type="tns:RequestOutputType"/>
+            <element name="ProcessStarterResponse" type="tns:ProcessStarterResponse"/>
+            <complexType name="ProcessStarterResponse">
+                <sequence>
+                    <element minOccurs="0" name="timeout" type="long"/>
+                    <element minOccurs="0" name="SAPSystemException" type="tns:RFCException"/>
+                </sequence>
+            </complexType>
+            <complexType name="ProcessStarterFaultResponse">
+                <sequence/>
+            </complexType>
+            <element name="ProcessStarterFaultResponse" type="tns:ProcessStarterFaultResponse"/>
+            <complexType name="RFCException">
+                <sequence>
+                    <element minOccurs="0" name="msg" nillable="true" type="string"/>
+                    <element minOccurs="0" name="msgCode"
+                        nillable="true" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="empty" type="anySimpleType"/>
+        </schema>
+        <schema elementFormDefault="unqualified"
+            targetNamespace="http://www.tibco.com/namespaces/tnt/plugins/invokerequestresponse+7c12469f-bd04-4f15-bc71-f3aec1080595+Output"
+            xmlns="http://www.w3.org/2001/XMLSchema"
+            xmlns:Q1="http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT" xmlns:tns="http://www.tibco.com/namespaces/tnt/plugins/invokerequestresponse+7c12469f-bd04-4f15-bc71-f3aec1080595+Output">
+            <import namespace="http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT"/>
+            <complexType name="RequestInputType">
+                <sequence>
+                    <element minOccurs="0" name="sessionID" type="string"/>
+                    <element minOccurs="0" name="timeout" type="long"/>
+                </sequence>
+            </complexType>
+            <complexType name="ProcessStarterOutput">
+                <sequence>
+                    <element minOccurs="0" name="SAPJCoAttributes" type="tns:SAPJCoAttributes"/>
+                </sequence>
+            </complexType>
+            <complexType name="SAPJCoAttributes">
+                <sequence>
+                    <element minOccurs="0" name="SAPJCO_RFCDESTINATION" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_CLIENT" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_CPICCONVID" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_HOST" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_SYSID" type="string"/>
+                    <element minOccurs="0" name="SAPJCO_USER" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="SAPJCoAttributes" type="tns:SAPJCoAttributes"/>
+            <complexType name="appInfo">
+                <sequence>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="info" type="tns:info"/>
+                </sequence>
+            </complexType>
+            <complexType name="info">
+                <sequence>
+                    <element minOccurs="0" name="item" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="ProcessStarterOutput" type="tns:ProcessStarterOutput"/>
+            <element name="RequestInputType" type="tns:RequestInputType"/>
+            <complexType name="RequestOutputType">
+                <sequence>
+                    <element minOccurs="0" name="sessionID" type="string"/>
+                    <element maxOccurs="1" ref="Q1:RfcResponse"/>
+                </sequence>
+            </complexType>
+            <element name="RequestOutputType" type="tns:RequestOutputType"/>
+            <element name="ProcessStarterResponse" type="tns:ProcessStarterResponse"/>
+            <complexType name="ProcessStarterResponse">
+                <sequence>
+                    <element minOccurs="0" name="timeout" type="long"/>
+                    <element minOccurs="0" name="SAPSystemException" type="tns:RFCException"/>
+                </sequence>
+            </complexType>
+            <complexType name="ProcessStarterFaultResponse">
+                <sequence/>
+            </complexType>
+            <element name="ProcessStarterFaultResponse" type="tns:ProcessStarterFaultResponse"/>
+            <complexType name="RFCException">
+                <sequence>
+                    <element minOccurs="0" name="msg" nillable="true" type="string"/>
+                    <element minOccurs="0" name="msgCode"
+                        nillable="true" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="empty" type="anySimpleType"/>
+        </schema>
+        <xs:schema attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://www.tibco.com/pe/WriteToLogActivitySchema"
+            xmlns:tns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:complexType name="LogParametersType">
+                <xs:sequence>
+                    <xs:element form="unqualified" minOccurs="0"
+                        name="msgCode" type="xs:string"/>
+                    <xs:element form="unqualified" minOccurs="0"
+                        name="loggerName" type="xs:string"/>
+                    <xs:element form="unqualified" minOccurs="0"
+                        name="logLevel" type="xs:string"/>
+                    <xs:element form="unqualified" name="message" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ActivityInput" type="tns:LogParametersType"/>
+        </xs:schema>
+        <wsdl:definitions
+            targetNamespace="http://xmlns.example.com/20180424004752"
+            xmlns:tns="http://xmlns.example.com/20180424004752"
+            xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop"
+            xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+    </tibex:Types>
+    <tibex:ProcessInfo callable="false" createdBy="Administrator"
+        createdOn="Tue Apr 24 00:47:52 UTC 2018" description=""
+        extraErrorVars="false" modifiers="public"
+        productVersion="6.4.0 V29 2017-05-09" scalable="true"
+        singleton="true" stateless="false" type="IT"/>
+    <tibex:ProcessInterface context="" input="" output=""/>
+    <tibex:ProcessTemplateConfigurations/>
+    <notation:Diagram measurementUnit="Pixel" type="BWProcess"
+        xmlns:bwnotation="http://tns.tibco.com/bw/runtime/BWNotation"
+        xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <children type="2001">
+            <children type="5001"/>
+            <children type="3001">
+                <styles xsi:type="notation:SortingStyle"/>
+                <styles xsi:type="notation:FilteringStyle"/>
+                <element href="//0/@process"/>
+            </children>
+            <children type="3002">
+                <styles xsi:type="notation:SortingStyle"/>
+                <styles xsi:type="notation:FilteringStyle"/>
+            </children>
+            <children type="3003">
+                <styles xsi:type="notation:SortingStyle"/>
+                <styles xsi:type="notation:FilteringStyle"/>
+            </children>
+            <children type="3004">
+                <children type="4018">
+                    <children type="3018">
+                        <children type="4020">
+                            <children type="3020">
+                                <children type="4005">
+                                    <children type="3007">
+                                    <children type="4002 bw.generalactivities.timer">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.0"/>
+                                    <layoutConstraint
+                                    height="40" width="40"
+                                    x="-41"
+                                    xsi:type="notation:Bounds" y="132"/>
+                                    </children>
+                                    <children type="4002 bw.marketorest.Retrieve">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.1"/>
+                                    <layoutConstraint
+                                    height="40" width="40"
+                                    x="116"
+                                    xsi:type="notation:Bounds" y="133"/>
+                                    </children>
+                                    <children type="4002 bw.sap.InvokeRequestResponse">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.2"/>
+                                    <layoutConstraint
+                                    height="40" width="40"
+                                    x="301"
+                                    xsi:type="notation:Bounds" y="134"/>
+                                    </children>
+                                    <children type="4002 bw.generalactivities.log">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.3"/>
+                                    <layoutConstraint
+                                    height="40" width="40"
+                                    x="33"
+                                    xsi:type="notation:Bounds" y="132"/>
+                                    </children>
+                                    <children type="4002 bw.generalactivities.log">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.4"/>
+                                    <layoutConstraint
+                                    height="40" width="40"
+                                    x="209"
+                                    xsi:type="notation:Bounds" y="133"/>
+                                    </children>
+                                    <styles xsi:type="notation:DrawerStyle"/>
+                                    <styles xsi:type="notation:SortingStyle"/>
+                                    <styles xsi:type="notation:FilteringStyle"/>
+                                    <element href="//0/@process/@activity/@activity"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <styles xsi:type="bwnotation:ResizingStyle"/>
+                                    <element href="//0/@process/@activity/@activity"/>
+                                    <layoutConstraint height="384"
+                                    width="515" xsi:type="notation:Bounds"/>
+                                </children>
+                                <styles xsi:type="notation:SortingStyle"/>
+                                <styles xsi:type="notation:FilteringStyle"/>
+                            </children>
+                            <styles fontName="Segoe UI" lineColor="0" xsi:type="notation:ShapeStyle"/>
+                            <styles xsi:type="bwnotation:BackgroundStyle"/>
+                            <styles xsi:type="bwnotation:ResizingStyle"/>
+                            <element href="//0/@process/@activity"/>
+                            <layoutConstraint height="365" width="444"
+                                x="30" xsi:type="notation:Bounds" y="20"/>
+                        </children>
+                        <styles xsi:type="notation:SortingStyle"/>
+                        <styles xsi:type="notation:FilteringStyle"/>
+                        <element href="//0/@process/@activity"/>
+                    </children>
+                    <styles fontName="Segoe UI" lineColor="0" xsi:type="notation:ShapeStyle"/>
+                    <styles xsi:type="bwnotation:BackgroundStyle"/>
+                    <styles xsi:type="bwnotation:ResizingStyle"/>
+                    <element href="//0/@process/@activity"/>
+                    <layoutConstraint height="409" width="519" xsi:type="notation:Bounds"/>
+                </children>
+                <styles xsi:type="notation:SortingStyle"/>
+                <styles xsi:type="notation:FilteringStyle"/>
+                <element href="//0/@process"/>
+            </children>
+            <styles fontName="Segoe UI" lineColor="0" xsi:type="notation:ShapeStyle"/>
+            <element href="//0/@process"/>
+            <layoutConstraint height="460" width="860" xsi:type="notation:Bounds"/>
+        </children>
+        <styles xsi:type="notation:DiagramStyle"/>
+        <element href="//0"/>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.0"/>
+            <bendpoints points="[25, 1, -132, 0]$[133, 0, -24, -1]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.1"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.1"/>
+            <bendpoints points="[25, 1, -160, 0]$[161, 0, -24, -1]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.1" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.2"/>
+            <bendpoints points="[0, 0, 0, 0]$[0, 0, 0, 0]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.3"/>
+            <bendpoints points="[0, 0, 0, 0]$[0, 0, 0, 0]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+    </notation:Diagram>
+    <bpws:variables>
+        <bpws:variable element="ns:ProcessContext"
+            name="_processContext" sca-bpel:internal="true"/>
+        <bpws:variable element="ns0:TimerOutputSchema" name="Timer" sca-bpel:internal="true"/>
+        <bpws:variable name="marketoConnProperty"
+            sca-bpel:hotUpdate="false" sca-bpel:privateProperty="true"
+            sca-bpel:property="yes"
+            sca-bpel:sharedResourceType="{http://ns.tibco.com/bw/sharedresource/marketorest}MarketoRest" type="xsd:string">
+            <bpws:from>
+                <bpws:literal>marketosapsuite.module.NewMarketoResource</bpws:literal>
+            </bpws:from>
+        </bpws:variable>
+        <bpws:variable element="ns1:GetLeadByIdRequest"
+            name="Retrieve-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns2:GetLeadByIdResponse" name="Retrieve" sca-bpel:internal="true"/>
+        <bpws:variable name="sapClientConnection"
+            sca-bpel:hotUpdate="false" sca-bpel:privateProperty="true"
+            sca-bpel:property="yes"
+            sca-bpel:sharedResourceType="{http://ns.tibco.com/bw/sharedresource/sapconnection}SAPConnection" type="xsd:string">
+            <bpws:from>
+                <bpws:literal>marketosapsuite.module.SAPConnection</bpws:literal>
+            </bpws:from>
+        </bpws:variable>
+        <bpws:variable element="ns3:RequestInputType"
+            name="InvokeRFCBAPIinSAP-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns5:RequestOutputType"
+            name="InvokeRFCBAPIinSAP" sca-bpel:internal="true"/>
+        <bpws:variable element="ns6:ActivityInput" name="Log-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns6:ActivityInput" name="LogLead-input" sca-bpel:internal="true"/>
+    </bpws:variables>
+    <bpws:extensions>
+        <bpws:extension mustUnderstand="no" namespace="http://www.eclipse.org/gmf/runtime/1.0.2/notation"/>
+        <bpws:extension mustUnderstand="no" namespace="http://www.tibco.com/bw/process/info"/>
+        <bpws:extension mustUnderstand="no" namespace="http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801"/>
+        <bpws:extension mustUnderstand="no" namespace="http://docs.oasis-open.org/ns/opencsa/sca/200912"/>
+        <bpws:extension mustUnderstand="no" namespace="http://ns.tibco.com/bw/property"/>
+        <bpws:extension mustUnderstand="no" namespace="http://www.tibco.com/bpel/2007/extensions"/>
+    </bpws:extensions>
+    <bpws:scope name="scope">
+        <bpws:flow name="flow">
+            <bpws:links>
+                <bpws:link name="TimerToRetrieve" tibex:linkType="SUCCESS"/>
+                <bpws:link name="RetrieveToInvokeRFCBAPIinSAP" tibex:linkType="SUCCESS"/>
+                <bpws:link name="LogToRetrieve" tibex:linkType="SUCCESS"/>
+                <bpws:link name="Log1ToInvokeRFCBAPIinSAP" tibex:linkType="SUCCESS"/>
+            </bpws:links>
+            <bpws:extensionActivity>
+                <tibex:receiveEvent createInstance="yes"
+                    eventTimeout="60" name="Timer"
+                    tibex:xpdlId="bb151e79-c402-4a9d-bda0-e5dc392de43e"
+                    variable="Timer" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:sources>
+                        <bpws:source linkName="TimerToRetrieve"/>
+                    </bpws:sources>
+                    <tibex:eventSource>
+                        <bwext:BWActivity
+                            activityTypeID="bw.generalactivities.timer"
+                            version="6.0.0.001"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:generalactivities="http://ns.tibco.com/bw/palette/generalactivities" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/generalactivities#//Timer"/>
+                                    <value
+                                    endTime="2018-04-24T00:48:06.529+0000"
+                                    intervalUnit="Second"
+                                    startTime="2018-04-24T00:48:06.529+0000"
+                                    timeInterval="10" xsi:type="generalactivities:Timer"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:eventSource>
+                </tibex:receiveEvent>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:activityExtension
+                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+input&quot; xmlns:bw=&quot;http://www.tibco.com/bw/xpath/bw-custom-functions&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; version=&quot;2.0&quot;>&lt;xsl:template name=&quot;Retrieve-input&quot; match=&quot;/&quot;>&lt;tns:GetLeadByIdRequest>&lt;tns:id>&lt;xsl:value-of select=&quot;xsd:int(bw:getModuleProperty(&amp;quot;/Marketo/LeadId&amp;quot;))&quot;/>&lt;/tns:id>&lt;/tns:GetLeadByIdRequest>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                    inputVariable="Retrieve-input" name="Retrieve"
+                    outputVariable="Retrieve"
+                    tibex:xpdlId="e5b31e2c-17f0-4083-ac3b-3533ef40a1cc" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="LogToRetrieve"/>
+                    </bpws:targets>
+                    <bpws:sources>
+                        <bpws:source linkName="RetrieveToInvokeRFCBAPIinSAP"/>
+                    </bpws:sources>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+input&quot; xmlns:bw=&quot;http://www.tibco.com/bw/xpath/bw-custom-functions&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; version=&quot;2.0&quot;>&lt;xsl:template name=&quot;Retrieve-input&quot; match=&quot;/&quot;>&lt;tns:GetLeadByIdRequest>&lt;tns:id>&lt;xsl:value-of select=&quot;xsd:int(bw:getModuleProperty(&amp;quot;/Marketo/LeadId&amp;quot;))&quot;/>&lt;/tns:id>&lt;/tns:GetLeadByIdRequest>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity
+                            activityTypeID="bw.marketorest.Retrieve"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:marketorest="http://ns.tibco.com/bw/palette/marketorest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/marketorest#//Retrieve"/>
+                                    <value Objects="Leads"
+                                    Operations="Lead by Id"
+                                    marketoConnection="marketoConnProperty"
+                                    timeout="30000" xsi:type="marketorest:Retrieve"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:activityExtension
+                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/namespaces/tnt/plugins/invokerequestresponse+7c12469f-bd04-4f15-bc71-f3aec1080595+Input&quot; xmlns:tns1=&quot;http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+output&quot; xmlns:tns2=&quot;http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;Retrieve&quot;/>&lt;xsl:template name=&quot;InvokeRFCBAPIinSAP-input&quot; match=&quot;/&quot;>&lt;tns:RequestInputType>&lt;tns2:RfcRequest>&lt;PI_NODETYPE>&lt;xsl:value-of select=&quot;&amp;quot;A&amp;quot;&quot;/>&lt;/PI_NODETYPE>&lt;PI_PARENT_NODE_ID>&lt;xsl:value-of select=&quot;$Retrieve/tns1:result/tns1:id&quot;/>&lt;/PI_PARENT_NODE_ID>&lt;PT_DATASET_INFOS>&lt;item>&lt;NODETYPE>&lt;xsl:value-of select=&quot;&amp;quot;A&amp;quot;&quot;/>&lt;/NODETYPE>&lt;NAME>&lt;xsl:value-of select=&quot;concat($Retrieve/tns1:result/tns1:firstName,&amp;quot; &amp;quot;,$Retrieve/tns1:result/tns1:lastName)&quot;/>&lt;/NAME>&lt;DESCR>&lt;xsl:choose>&lt;xsl:when test=&quot;exists($Retrieve/tns1:result/tns1:email)&quot;>&lt;xsl:value-of select=&quot;$Retrieve/tns1:result/tns1:email&quot;/>&lt;/xsl:when>&lt;xsl:otherwise>&lt;xsl:attribute name=&quot;xsi:nil&quot;>true&lt;/xsl:attribute>&lt;/xsl:otherwise>&lt;/xsl:choose>&lt;/DESCR>&lt;/item>&lt;/PT_DATASET_INFOS>&lt;/tns2:RfcRequest>&lt;/tns:RequestInputType>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                    inputVariable="InvokeRFCBAPIinSAP-input"
+                    name="InvokeRFCBAPIinSAP"
+                    outputVariable="InvokeRFCBAPIinSAP"
+                    tibex:xpdlId="7c12469f-bd04-4f15-bc71-f3aec1080595" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="Log1ToInvokeRFCBAPIinSAP"/>
+                    </bpws:targets>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/namespaces/tnt/plugins/invokerequestresponse+7c12469f-bd04-4f15-bc71-f3aec1080595+Input&quot; xmlns:tns1=&quot;http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+output&quot; xmlns:tns2=&quot;http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;Retrieve&quot;/>&lt;xsl:template name=&quot;InvokeRFCBAPIinSAP-input&quot; match=&quot;/&quot;>&lt;tns:RequestInputType>&lt;tns2:RfcRequest>&lt;PI_NODETYPE>&lt;xsl:value-of select=&quot;&amp;quot;A&amp;quot;&quot;/>&lt;/PI_NODETYPE>&lt;PI_PARENT_NODE_ID>&lt;xsl:value-of select=&quot;$Retrieve/tns1:result/tns1:id&quot;/>&lt;/PI_PARENT_NODE_ID>&lt;PT_DATASET_INFOS>&lt;item>&lt;NODETYPE>&lt;xsl:value-of select=&quot;&amp;quot;A&amp;quot;&quot;/>&lt;/NODETYPE>&lt;NAME>&lt;xsl:value-of select=&quot;concat($Retrieve/tns1:result/tns1:firstName,&amp;quot; &amp;quot;,$Retrieve/tns1:result/tns1:lastName)&quot;/>&lt;/NAME>&lt;DESCR>&lt;xsl:choose>&lt;xsl:when test=&quot;exists($Retrieve/tns1:result/tns1:email)&quot;>&lt;xsl:value-of select=&quot;$Retrieve/tns1:result/tns1:email&quot;/>&lt;/xsl:when>&lt;xsl:otherwise>&lt;xsl:attribute name=&quot;xsi:nil&quot;>true&lt;/xsl:attribute>&lt;/xsl:otherwise>&lt;/xsl:choose>&lt;/DESCR>&lt;/item>&lt;/PT_DATASET_INFOS>&lt;/tns2:RfcRequest>&lt;/tns:RequestInputType>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity
+                            activityTypeID="bw.sap.InvokeRequestResponse"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:internalization="http://ns.tibco.com/bw/palette/sap/internalization"
+                            xmlns:sap="http://ns.tibco.com/bw/palette/sap" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/sap#//InvokeRequestResponse"/>
+                                    <value
+                                    connectionReference="sapClientConnection"
+                                    operation="__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT"
+                                    schemaPath="/MarketoSAPSuite.module/Schemas/.SAP/SAPConnection/functionModules/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT.xsd" xsi:type="sap:InvokeRequestResponse">
+                                    <internalConfig
+                                    connRefName="SAPConnection"
+                                    errorXsdElement="http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT##SAPSystemException"
+                                    inputXsdElement="http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT##RfcRequest"
+                                    minOccurs="true"
+                                    outputXsdElement="http://www.tibco.com/xmlns/sap/SAPConnection/__SLASH__IXOS__SLASH__DC_K_BAPI_INSERT##RfcResponse" xsi:type="internalization:InvokeRFC"/>
+                                    </value>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:activityExtension
+                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/pe/WriteToLogActivitySchema&quot; version=&quot;2.0&quot;>&lt;xsl:template name=&quot;Log-input&quot; match=&quot;/&quot;>&lt;tns:ActivityInput>&lt;message>&lt;xsl:value-of select=&quot;&amp;quot;Retrieving lead from Marketo&amp;quot;&quot;/>&lt;/message>&lt;/tns:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                    inputVariable="Log-input" name="Log"
+                    tibex:xpdlId="75380b36-6a8f-478f-9483-b8977c4c39a3" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="TimerToRetrieve"/>
+                    </bpws:targets>
+                    <bpws:sources>
+                        <bpws:source linkName="LogToRetrieve"/>
+                    </bpws:sources>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/pe/WriteToLogActivitySchema&quot; version=&quot;2.0&quot;>&lt;xsl:template name=&quot;Log-input&quot; match=&quot;/&quot;>&lt;tns:ActivityInput>&lt;message>&lt;xsl:value-of select=&quot;&amp;quot;Retrieving lead from Marketo&amp;quot;&quot;/>&lt;/message>&lt;/tns:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity
+                            activityTypeID="bw.generalactivities.log"
+                            version="6.0.0.001"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:generalactivities="http://ns.tibco.com/bw/palette/generalactivities" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/generalactivities#//Log"/>
+                                    <value loggerName="" role="Info"
+                                    suppressJobInfo="true" xsi:type="generalactivities:Log"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:activityExtension
+                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/pe/WriteToLogActivitySchema&quot; xmlns:tns1=&quot;http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+output&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;Retrieve&quot;/>&lt;xsl:template name=&quot;Log1-input&quot; match=&quot;/&quot;>&lt;tns:ActivityInput>&lt;message>&lt;xsl:value-of select=&quot;$Retrieve/tns1:result/tns1:firstName&quot;/>&lt;/message>&lt;/tns:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                    inputVariable="LogLead-input" name="LogLead"
+                    tibex:xpdlId="bd96e835-6378-448a-b63c-dec242743f56" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="RetrieveToInvokeRFCBAPIinSAP"/>
+                    </bpws:targets>
+                    <bpws:sources>
+                        <bpws:source linkName="Log1ToInvokeRFCBAPIinSAP"/>
+                    </bpws:sources>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/pe/WriteToLogActivitySchema&quot; xmlns:tns1=&quot;http://tns.tibco.com/bw/activity/plugin/retrieve+e5b31e2c-17f0-4083-ac3b-3533ef40a1cc+output&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;Retrieve&quot;/>&lt;xsl:template name=&quot;Log1-input&quot; match=&quot;/&quot;>&lt;tns:ActivityInput>&lt;message>&lt;xsl:value-of select=&quot;$Retrieve/tns1:result/tns1:firstName&quot;/>&lt;/message>&lt;/tns:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity
+                            activityTypeID="bw.generalactivities.log"
+                            version="6.0.0.001"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:generalactivities="http://ns.tibco.com/bw/palette/generalactivities" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/generalactivities#//Log"/>
+                                    <value role="Info"
+                                    suppressJobInfo="true" xsi:type="generalactivities:Log"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+        </bpws:flow>
+    </bpws:scope>
+</bpws:process>

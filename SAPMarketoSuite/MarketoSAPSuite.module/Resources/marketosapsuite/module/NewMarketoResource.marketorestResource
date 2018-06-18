@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jndi:namedResource xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:httpproxy="http://xsd.tns.tibco.com/bw/models/sharedresource/httpproxy" xmlns:jndi="http://xsd.tns.tibco.com/amf/models/sharedresource/jndi" xmlns:marketorest="http://ns.tibco.com/bw/sharedresource/marketorest" xmi:id="_wjWDoUchEeiKj_Nebg2wVA" name="marketosapsuite.module.NewMarketoResource" type="marketorest:MarketoRest">
+  <jndi:description>6fbc9e03-bfc4-4161-ad9e-e9b9738354da&#xD;
+&#xD;
+&#xD;
+a6EXtpW9T2kIrfYGejTFC07B4hMToYh3&#xD;
+</jndi:description>
+  <jndi:reference xmi:id="_A-zwgEciEeiKj_Nebg2wVA" key="proxyConfigurationName" type="httpproxy:ProxyConfiguration" value=""/>
+  <jndi:configuration xsi:type="marketorest:MarketoRest" xmi:id="_wjXRwEchEeiKj_Nebg2wVA" SRIdentifier="44b142c9-1952-46af-8aa2-0aed21487413" RetryInterval="3000">
+    <substitutionBindings xmi:id="_q7_LAEdMEeiVWLSik00a7A" template="RESTEndpoint" propName="/Marketo/EndPointUrl"/>
+    <substitutionBindings xmi:id="_sBXesEdMEeiVWLSik00a7A" template="IdentityURL" propName="/Marketo/IdentityUrl"/>
+    <substitutionBindings xmi:id="_s3IpEEdMEeiVWLSik00a7A" template="ClientId" propName="/Marketo/ClientId"/>
+    <substitutionBindings xmi:id="_t6T9UEdMEeiVWLSik00a7A" template="ClientSecret" propName="/Marketo/ClientSecret"/>
+  </jndi:configuration>
+</jndi:namedResource>

@@ -1,6 +1,7 @@
 # TIBCO BusinessWorks Sample for SAP and Marketo
 ## Synopsis
 The project consists of two BusinessWorks processes, to keep SAP and Marketo in sync. The project can be used as is, or as a quickstart to bootstrap the development of SAP to Marketo integration.
+
 Note: Authentication values such as tokens and usernames/passwords are dummy values and will need to be updated for the sample to deploy properly.
 
 ## Process Diagram
